@@ -1,4 +1,22 @@
 class PokemonsController < ApplicationController
+  def index
+    @pokemons = Pokemon.all
+  end
+    
+  def new
+  end
+
+  def create
+    @pokemon = Pokemon.new(pokemon_params)
+    @pokemon.save
+    @pokemon.update_attributes(trainer_id: current_trainer.id, health: 100, level: 1)
+    redirect_to trainer_path(current_trainer.id), :action => "get"
+  end
+
+  def show
+    @pokemon = Pokemon.find(params[:id])
+  end
+
   def capture
     @pokemon = Pokemon.find(params[:id])
     @pokemon.update_attributes(trainer_id: current_trainer.id)
@@ -17,7 +35,7 @@ class PokemonsController < ApplicationController
   private
 
   def pokemon_params
-    params.require(:pokemon).permit(:id)
+    params.require(:pokemon).permit(:id, :name)
   end
     
 end
