@@ -5,10 +5,19 @@ class PokemonsController < ApplicationController
     redirect_to root_path
   end
 
+  def damage
+    @pokemon = Pokemon.find(params[:id])
+    @pokemon.update_attributes(health: @pokemon.health - 10)
+    if @pokemon.health <= 0
+      @pokemon.destroy
+    end 
+    redirect_to trainer_path(@pokemon.trainer_id), :action => "get"
+  end
+
   private
 
   def pokemon_params
-    params.require(:pokemon).permit(:name, :level, :trainer_id)
+    params.require(:pokemon).permit(:id)
   end
     
 end
