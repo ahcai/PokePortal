@@ -8,9 +8,13 @@ class PokemonsController < ApplicationController
 
   def create
     @pokemon = Pokemon.new(pokemon_params)
-    @pokemon.save
-    @pokemon.update_attributes(trainer_id: current_trainer.id, health: 100, level: 1)
-    redirect_to trainer_path(current_trainer.id), :action => "get"
+    if @pokemon.save
+      @pokemon.update_attributes(trainer_id: current_trainer.id, health: 100, level: 1)
+      redirect_to trainer_path(current_trainer.id), :action => "get"
+    else
+      redirect_to new_pokemon_path
+      flash[:error] = @pokemon.errors.full_messages.to_sentence
+    end
   end
 
   def show
